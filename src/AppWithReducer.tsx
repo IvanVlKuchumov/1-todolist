@@ -14,7 +14,14 @@ import {
     todolistsReducer,
     TodolistsReducerType
 } from "./state/todolists-reducer";
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/task-reducer";
+import {
+    addTaskAC,
+    changeTaskStatusAC,
+    changeTaskTitleAC,
+    removeTaskAC,
+    TaskReducerType,
+    tasksReducer
+} from "./state/task-reducer";
 
 
 export type FilterValuesType = "all" | "active" | "completed";
@@ -38,7 +45,7 @@ function AppWithReducer() {
             {id: todolistId2, title: "What to buy", filter: "all"}]
     )
 
-    let [tasks, dispatchTasks] = useReducer(tasksReducer, {
+    let [tasks, dispatchTasks] = useReducer<Reducer<TasksStateType, TaskReducerType>>(tasksReducer, {
         [todolistId1]: [
             {id: v1(), title: "HTML&CSS", isDone: true},
             {id: v1(), title: "JS", isDone: true}
