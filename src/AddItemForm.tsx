@@ -31,7 +31,7 @@ export const AddItemForm = memo((props: AddItemFormPropsType) => {
            setError(null);
        }
         if (e.charCode === 13) {
-            addItem();
+            addItem()
         }
     }
 
