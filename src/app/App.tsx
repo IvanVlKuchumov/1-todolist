@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import './App.css'
 import {TodolistsList} from '../features/TodolistsList/TodolistsList'
 
@@ -12,17 +12,41 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import {Menu} from '@mui/icons-material';
-import {LinearProgress} from '@mui/material';
-import {useAppSelector} from './store';
-import {RequestStatusType} from './app-reducer';
+import {CircularProgress, LinearProgress} from '@mui/material';
+import {useAppDispatch, useAppSelector} from './store';
+import {initializeAppTC, RequestStatusType} from './app-reducer';
 import {ErrorSnackbar} from '../components/ErrorSnackBar/ErrorSnackBar';
 import {Navigate, Route, Routes} from 'react-router-dom';
 import {Login} from '../features/Login/Login';
+import {fetchTodolistsTC} from '../features/TodolistsList/todolists-reducer';
+import {logoutTC} from '../features/Login/auth-reducer';
 
 
 const App = () => {
 
     const status = useAppSelector<RequestStatusType>(state => state.app.status)
+    const isInitialized = useAppSelector<boolean>(state => state.app.isInitialized)
+    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
+
+    const dispatch = useAppDispatch()
+
+    const logout = () => {
+        dispatch(logoutTC())
+    }
+
+
+    useEffect(() => {
+        console.log('App')
+        dispatch(initializeAppTC())
+    }, [])
+
+    if (!isInitialized) {
+        return <div
+            style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+            <CircularProgress/>
+        </div>
+    }
+
 
     return (
         <div className="App">
@@ -35,7 +59,7 @@ const App = () => {
                     <Typography variant="h6">
                         News
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    {isLoggedIn && <Button color="inherit" onClick={logout}>Logout</Button>}
                 </Toolbar>
                 {status === 'loading' && <LinearProgress/>}
             </AppBar>

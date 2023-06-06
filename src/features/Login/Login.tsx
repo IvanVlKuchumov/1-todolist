@@ -8,6 +8,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import {useFormik} from 'formik';
+import {useAppDispatch, useAppSelector} from '../../app/store';
+import {signInTC} from './auth-reducer';
+import {useSelector} from 'react-redux';
+import {Navigate} from 'react-router-dom';
 
 
 type FormikErrorType = {
@@ -16,7 +20,17 @@ type FormikErrorType = {
     rememberMe?: boolean
 }
 
+export type FormDataType = {
+    email: string
+    password: string
+    rememberMe: boolean
+}
+
 export const Login = () => {
+
+    const dispatch = useAppDispatch()
+
+    const isSignIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
 
     const formik = useFormik({
         initialValues: {
@@ -39,10 +53,14 @@ export const Login = () => {
             return errors
         },
         onSubmit: values => {
-            alert(JSON.stringify(values))
+            dispatch(signInTC(values))
             formik.resetForm()
         }
     })
+
+    if (isSignIn) {
+        return <Navigate to={'/'}/>
+    }
 
     return (
         <Grid container justifyContent={'center'}>

@@ -13,9 +13,10 @@ import {addTaskTC, removeTaskTC, TasksStateType, updateTaskTC} from './tasks-red
 import {TaskStatuses} from '../../api/todolists-api'
 import {AddItemForm} from '../../components/AddItemForm/AddItemForm'
 import {Todolist} from './Todolist/Todolist'
-
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
+import {Navigate} from 'react-router-dom';
+
 
 export const TodolistsList: React.FC = () => {
 
@@ -24,7 +25,14 @@ export const TodolistsList: React.FC = () => {
 
     const dispatch = useAppDispatch()
 
+    const isSignIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
+
     useEffect(() => {
+        console.log('Todo')
+
+        if (!isSignIn) {
+            return
+        }
         dispatch(fetchTodolistsTC())
     }, [])
 
@@ -68,6 +76,9 @@ export const TodolistsList: React.FC = () => {
         dispatch(thunk)
     }, [])
 
+    if (!isSignIn) {
+        return <Navigate to={'/login'}/>
+    }
 
     return <>
         <Grid container style={{padding: '20px'}}>

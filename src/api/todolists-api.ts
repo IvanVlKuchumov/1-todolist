@@ -1,4 +1,5 @@
 import axios, {AxiosResponse} from 'axios'
+import {FormDataType} from '../features/Login/Login';
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
@@ -11,8 +12,14 @@ const instance = axios.create({
 //auth
 
 export const authAPI = {
-    login(email: string, password: string, rememberMe: boolean, captcha: string = '') {
-        return instance.post<AxiosResponse<ResponseType<{ userId: number }>>>('auth/login', {email, password, rememberMe, captcha})
+    login(data: FormDataType) {
+        return instance.post<ResponseType<{ userId: number}>>('auth/login', data)
+    },
+    me() {
+        return instance.get('auth/me')
+    },
+    logout() {
+        return instance.delete('auth/login')
     }
 }
 
